@@ -33,7 +33,6 @@
       padding: 40px 20px;
     }
 
-    /* Brand Header Logo */
     .brand-header {
       font-size: 28px;
       font-weight: 700;
@@ -43,7 +42,6 @@
       text-align: center;
     }
 
-    /* Card Container */
     .form-card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -53,7 +51,6 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    /* Top Banner Box */
     .form-title-box {
       background-color: #f9fafb;
       border-radius: 8px;
@@ -73,7 +70,6 @@
       font-size: 15px;
     }
 
-    /* Inputs & Grouping */
     .form-group {
       margin-bottom: 28px;
     }
@@ -116,7 +112,6 @@
       box-shadow: 0 0 0 3px rgba(59, 113, 232, 0.15);
     }
 
-    /* Action Button */
     .submit-btn {
       background-color: var(--primary-blue);
       color: #ffffff;
@@ -138,7 +133,6 @@
       cursor: not-allowed;
     }
 
-    /* Feedback Status Box */
     #statusMessage {
       margin-top: 16px;
       font-size: 14px;
@@ -169,10 +163,8 @@
 </head>
 <body>
 
-  <!-- Brand Logo -->
   <div class="brand-header">Better Marketing Online</div>
 
-  <!-- Form Container -->
   <div class="form-card">
     <div class="form-title-box">
       <h1>Contact Better Marketing Online</h1>
@@ -180,25 +172,21 @@
     </div>
 
     <form id="betterMarketingForm">
-      <!-- 1. Optional Input -->
       <div class="form-group">
         <label for="whyHere">[Optional] Why are you here?</label>
         <textarea id="whyHere" placeholder="Enter your answer"></textarea>
       </div>
 
-      <!-- 2. Name Input -->
       <div class="form-group">
         <label for="userName">Name <span class="required-asterisk">*</span></label>
         <input type="text" id="userName" placeholder="Enter your name" required>
       </div>
 
-      <!-- 3. Email Input -->
       <div class="form-group">
         <label for="userEmail">Email address <span class="required-asterisk">*</span></label>
         <input type="email" id="userEmail" placeholder="Enter your email address" required>
       </div>
 
-      <!-- Submit Button -->
       <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
 
       <div id="statusMessage"></div>
@@ -211,6 +199,16 @@
 
   <script>
     const WORKER_URL = "https://asana-form-handler.a-brougher.workers.dev/";
+
+    // Helper function to escape special XML characters for Asana
+    function escapeXml(str) {
+      return (str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+    }
 
     document.getElementById("betterMarketingForm").addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -229,11 +227,20 @@
 
       const pageUrl = window.location.href;
 
-      // Rich HTML markup for Asana Task Description
-      const htmlNotes = `<body><strong>[Optional] Why are you here?:</strong><br>${whyHere || ""}<br><br><strong>Name:</strong><br>${name}<br><br><strong>Email address:</strong><br><a href="mailto:${email}">${email}</a><br><br>___________________<br>This task was submitted through <strong>Contact Better Marketing Online</strong><br><a href="${pageUrl}">${pageUrl}</a></body>`;
+      // 1. Plain text representation for standard notes fallback
+      const plainNotes = `[Optional] Why are you here?:\n${whyHere || ""}\n\nName:\n${name}\n\nEmail address:\n${email}\n\n___________________\nThis task was submitted through Contact Better Marketing Online\n${pageUrl}`;
+
+      // 2. Strict XML representation for html_notes
+      const cleanWhy = escapeXml(whyHere);
+      const cleanName = escapeXml(name);
+      const cleanEmail = escapeXml(email);
+      const cleanUrl = escapeXml(pageUrl);
+
+      const htmlNotes = `<body><strong>[Optional] Why are you here?:</strong><br/>${cleanWhy || ""}<br/><br/><strong>Name:</strong><br/>${cleanName}<br/><br/><strong>Email address:</strong><br/><a href="mailto:${cleanEmail}">${cleanEmail}</a><br/><br/>___________________<br/>This task was submitted through <strong>Contact Better Marketing Online</strong><br/><a href="${cleanUrl}">${cleanUrl}</a></body>`;
 
       const payload = {
         title: name,
+        notes: plainNotes,
         html_notes: htmlNotes
       };
 
