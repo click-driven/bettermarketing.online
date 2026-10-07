@@ -220,4 +220,49 @@
 
       const name = document.getElementById("userName").value;
       const email = document.getElementById("userEmail").value;
-      const whyHere = document.
+      const whyHere = document.getElementById("whyHere").value;
+
+      // Disable button during submit
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Submitting...";
+      statusMsg.className = "";
+      statusMsg.style.display = "none";
+
+      // Dynamically get the submitted page URL
+      const pageUrl = window.location.href;
+
+      // Format description for Asana including the source URL footer
+      const formattedNotes = `[Optional] Why are you here?:\n${whyHere || ""}\n\nName:\n${name}\n\nEmail address:\n${email}\n\n___________________\nThis task was submitted through Contact Better Marketing Online\n${pageUrl}`;
+
+      const payload = {
+        title: name,
+        notes: formattedNotes
+      };
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          statusMsg.innerText = "Thank you! Your message has been sent.";
+          statusMsg.className = "status-success";
+          document.getElementById("betterMarketingForm").reset();
+        } else {
+          const errorData = await response.json();
+          statusMsg.innerText = "Error: " + (errorData.error || "Submission failed.");
+          statusMsg.className = "status-error";
+        }
+      } catch (err) {
+        statusMsg.innerText = "Network error. Please try again.";
+        statusMsg.className = "status-error";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit";
+      }
+    });
+  </script>
+</body>
+</html>
