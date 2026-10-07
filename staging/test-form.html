@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Better Marketing Online</title>
+  <style>
+    :root {
+      --primary-blue: #3b71e8;
+      --primary-blue-hover: #2a5cc7;
+      --bg-color: #f7f8f9;
+      --card-bg: #ffffff;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --border-color: #e5e7eb;
+      --input-bg: #fafafa;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    /* Logo Styling */
+    .brand-header {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      color: #111827;
+      text-align: center;
+    }
+
+    /* Main Container */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 640px;
+      padding: 40px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Header Banner */
+    .form-title-box {
+      background-color: #f9fafb;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .form-title-box h1 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .form-title-box p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 15px;
+    }
+
+    /* Form Inputs */
+    .form-group {
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .required-asterisk {
+      color: #e63946;
+      margin-left: 2px;
+    }
+
+    textarea, input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background-color: var(--card-bg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    textarea::placeholder, input::placeholder {
+      color: #9ca3af;
+    }
+
+    textarea:focus, input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(59, 113, 232, 0.15);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background-color: var(--primary-blue);
+      color: #ffffff;
+      border: none;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--primary-blue-hover);
+    }
+
+    .submit-btn:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    /* Status Message & Footer */
+    #statusMessage {
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-success {
+      color: #059669;
+      display: block !important;
+    }
+
+    .status-error {
+      color: #dc2626;
+      display: block !important;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .footer-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Brand Logo -->
+  <div class="brand-header">Better Marketing Online</div>
+
+  <!-- Form Container -->
+  <div class="form-card">
+    <div class="form-title-box">
+      <h1>Contact Better Marketing Online</h1>
+      <p>Send your message below.</p>
+    </div>
+
+    <form id="betterMarketingForm">
+      <!-- 1. Optional Field -->
+      <div class="form-group">
+        <label for="whyHere">[Optional] Why are you here?</label>
+        <textarea id="whyHere" placeholder="Enter your answer"></textarea>
+      </div>
+
+      <!-- 2. Name Field -->
+      <div class="form-group">
+        <label for="userName">Name <span class="required-asterisk">*</span></label>
+        <input type="text" id="userName" placeholder="Enter your name" required>
+      </div>
+
+      <!-- 3. Email Field -->
+      <div class="form-group">
+        <label for="userEmail">Email address <span class="required-asterisk">*</span></label>
+        <input type="email" id="userEmail" placeholder="Enter your email address" required>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+
+      <div id="statusMessage"></div>
+
+      <div class="footer-links">
+        <a href="#">Terms</a> &bull; <a href="#">Privacy</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // ⚠️ REPLACE THIS with your actual Cloudflare Worker URL
+    const WORKER_URL = "https://asana-form-handler.a-brougher.workers.dev/";
+
+    document.getElementById("betterMarketingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById("submitBtn");
+      const statusMsg = document.getElementById("statusMessage");
+
+      const name = document.getElementById("userName").value;
+      const email = document.getElementById("userEmail").value;
+      const whyHere = document.getElementById("whyHere").value;
+
+      // Disable button during submit
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Submitting...";
+      statusMsg.className = "";
+      statusMsg.style.display = "none";
+
+      // Build payload for your Cloudflare Worker / Asana
+      const payload = {
+        title: `Better Marketing Online Contact: ${name}`,
+        notes: `Name: ${name}\nEmail: ${email}\n\nWhy are you here?:\n${whyHere || "N/A"}`
+      };
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          statusMsg.innerText = "Thank you! Your message has been sent.";
+          statusMsg.className = "status-success";
+          document.getElementById("betterMarketingForm").reset();
+        } else {
+          const errorData = await response.json();
+          statusMsg.innerText = "Error: " + (errorData.error || "Submission failed.");
+          statusMsg.className = "status-error";
+        }
+      } catch (err) {
+        statusMsg.innerText = "Network error. Please try again.";
+        statusMsg.className = "status-error";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit";
+      }
+    });
+  </script>
+</body>
+</html>
