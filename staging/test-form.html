@@ -210,7 +210,6 @@
   </div>
 
   <script>
-    // ⚠️ REPLACE THIS with your actual Cloudflare Worker URL
     const WORKER_URL = "https://asana-form-handler.a-brougher.workers.dev/";
 
     document.getElementById("betterMarketingForm").addEventListener("submit", async (e) => {
@@ -221,44 +220,4 @@
 
       const name = document.getElementById("userName").value;
       const email = document.getElementById("userEmail").value;
-      const whyHere = document.getElementById("whyHere").value;
-
-      // Disable button during submit
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Submitting...";
-      statusMsg.className = "";
-      statusMsg.style.display = "none";
-
-      // Build payload for your Cloudflare Worker / Asana
-      const payload = {
-        title: `Better Marketing Online Contact: ${name}`,
-        notes: `Name: ${name}\nEmail: ${email}\n\nWhy are you here?:\n${whyHere || "N/A"}`
-      };
-
-      try {
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          statusMsg.innerText = "Thank you! Your message has been sent.";
-          statusMsg.className = "status-success";
-          document.getElementById("betterMarketingForm").reset();
-        } else {
-          const errorData = await response.json();
-          statusMsg.innerText = "Error: " + (errorData.error || "Submission failed.");
-          statusMsg.className = "status-error";
-        }
-      } catch (err) {
-        statusMsg.innerText = "Network error. Please try again.";
-        statusMsg.className = "status-error";
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Submit";
-      }
-    });
-  </script>
-</body>
-</html>
+      const whyHere = document.
