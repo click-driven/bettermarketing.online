@@ -33,7 +33,7 @@
       padding: 40px 20px;
     }
 
-    /* Logo Styling */
+    /* Brand Header Logo */
     .brand-header {
       font-size: 28px;
       font-weight: 700;
@@ -43,7 +43,7 @@
       text-align: center;
     }
 
-    /* Main Container */
+    /* Card Container */
     .form-card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -53,7 +53,7 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    /* Header Banner */
+    /* Top Banner Box */
     .form-title-box {
       background-color: #f9fafb;
       border-radius: 8px;
@@ -73,7 +73,7 @@
       font-size: 15px;
     }
 
-    /* Form Inputs */
+    /* Inputs & Grouping */
     .form-group {
       margin-bottom: 28px;
     }
@@ -116,7 +116,7 @@
       box-shadow: 0 0 0 3px rgba(59, 113, 232, 0.15);
     }
 
-    /* Submit Button */
+    /* Action Button */
     .submit-btn {
       background-color: var(--primary-blue);
       color: #ffffff;
@@ -138,7 +138,7 @@
       cursor: not-allowed;
     }
 
-    /* Status Message & Footer */
+    /* Feedback Status Box */
     #statusMessage {
       margin-top: 16px;
       font-size: 14px;
@@ -180,19 +180,19 @@
     </div>
 
     <form id="betterMarketingForm">
-      <!-- 1. Optional Field -->
+      <!-- 1. Optional Input -->
       <div class="form-group">
         <label for="whyHere">[Optional] Why are you here?</label>
         <textarea id="whyHere" placeholder="Enter your answer"></textarea>
       </div>
 
-      <!-- 2. Name Field -->
+      <!-- 2. Name Input -->
       <div class="form-group">
         <label for="userName">Name <span class="required-asterisk">*</span></label>
         <input type="text" id="userName" placeholder="Enter your name" required>
       </div>
 
-      <!-- 3. Email Field -->
+      <!-- 3. Email Input -->
       <div class="form-group">
         <label for="userEmail">Email address <span class="required-asterisk">*</span></label>
         <input type="email" id="userEmail" placeholder="Enter your email address" required>
@@ -222,21 +222,19 @@
       const email = document.getElementById("userEmail").value;
       const whyHere = document.getElementById("whyHere").value;
 
-      // Disable button during submit
       submitBtn.disabled = true;
       submitBtn.innerText = "Submitting...";
       statusMsg.className = "";
       statusMsg.style.display = "none";
 
-      // Dynamically get the submitted page URL
       const pageUrl = window.location.href;
 
-      // Format description for Asana including the source URL footer
-      const formattedNotes = `[Optional] Why are you here?:\n${whyHere || ""}\n\nName:\n${name}\n\nEmail address:\n${email}\n\n___________________\nThis task was submitted through Contact Better Marketing Online\n${pageUrl}`;
+      // Rich HTML markup for Asana Task Description
+      const htmlNotes = `<body><strong>[Optional] Why are you here?:</strong><br>${whyHere || ""}<br><br><strong>Name:</strong><br>${name}<br><br><strong>Email address:</strong><br><a href="mailto:${email}">${email}</a><br><br>___________________<br>This task was submitted through <strong>Contact Better Marketing Online</strong><br><a href="${pageUrl}">${pageUrl}</a></body>`;
 
       const payload = {
         title: name,
-        notes: formattedNotes
+        html_notes: htmlNotes
       };
 
       try {
