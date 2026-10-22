@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "better-marketing-online",
+  "name": "bettermarketing-online",
   "compatibility_date": "2026-10-07",
   "assets": {
     "directory": "./"
